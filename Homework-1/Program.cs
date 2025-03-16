@@ -10,7 +10,7 @@ namespace Homework_1
             string database = "Products";
             if (DatabaseExists(connectionString, database))
             {
-                Console.WriteLine("It exists");
+                Console.WriteLine("Database exists");
             }
             else
             {
@@ -18,19 +18,19 @@ namespace Homework_1
             }
             connectionString = $"Server = Kristiyan\\MSSQLSERVER03;Database={database};Trusted_Connection = true; TrustServerCertificate = true";
             CreateTables(connectionString);
-            InsertClient(connectionString, "Pesho");
-            InsertClient(connectionString, "Stamat");
-            InsertClient(connectionString, "John");
-            InsertClient(connectionString, "Mark");
-            InsertProduct(connectionString, "Apples");
-            InsertProduct(connectionString, "Bananas");
-            InsertProduct(connectionString, "Oranges");
-            InsertProduct(connectionString, "Mangos");
+            //InsertClient(connectionString, "Pesho");
+            //InsertClient(connectionString, "Stamat");
+            //InsertClient(connectionString, "John");
+            InsertClientTransaction(connectionString, "Steph");
+            //InsertProduct(connectionString, "Apples");
+            //InsertProduct(connectionString, "Bananas");
+            //InsertProduct(connectionString, "Oranges");
+            //InsertProduct(connectionString, "Mangos");
 
-            ClientToBuyProduct(connectionString, 1, 1);
-            ClientToBuyProduct(connectionString, 2, 3);
-            ClientToBuyProduct(connectionString, 3, 3);
-            ClientToBuyProduct(connectionString, 4, 3);
+            //ClientToBuyProduct(connectionString, 1, 1);
+            //ClientToBuyProduct(connectionString, 2, 3);
+            //ClientToBuyProduct(connectionString, 3, 3);
+            //ClientToBuyProduct(connectionString, 4, 3);
 
             GetCountOfBuyers(connectionString);
 
@@ -184,6 +184,48 @@ namespace Homework_1
             }
         }
 
+        private static void InsertClientTransaction(string connectionString, string name)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlCommand cmd = conn.CreateCommand();
+                SqlTransaction transaction;
+
+                transaction = conn.BeginTransaction();
+
+                cmd.Connection = conn;
+                cmd.Transaction = transaction;
+
+                try
+                {
+                    cmd.CommandText =
+                        "INSERT INTO Clients (Name) VALUES (@clientName)";
+                    cmd.Parameters.AddWithValue("@clientName", name);
+                    cmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+                    Console.WriteLine("Record is written to database.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                    }
+                }
+            }
+        }
         static void GetCountOfBuyers(string connectionString) 
         {
             string getCountQuery = "SELECT ProductName, COUNT(Clients.Id) AS ClientCount FROM Clients JOIN Products ON Clients.ProductId = Products.ProductId GROUP BY ProductName";
