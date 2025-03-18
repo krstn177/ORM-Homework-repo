@@ -18,19 +18,22 @@ namespace Homework_1
             }
             connectionString = $"Server = Kristiyan\\MSSQLSERVER03;Database={database};Trusted_Connection = true; TrustServerCertificate = true";
             CreateTables(connectionString);
+            //InsertProduct(connectionString, "Apples");
+            //InsertProduct(connectionString, "Bananas");
+            InsertProduct(connectionString, "Oranges");
+            //InsertProduct(connectionString, "Mangos");
+
             //InsertClient(connectionString, "Pesho");
             //InsertClient(connectionString, "Stamat");
             //InsertClient(connectionString, "John");
-            InsertClientTransaction(connectionString, "Steph");
-            //InsertProduct(connectionString, "Apples");
-            //InsertProduct(connectionString, "Bananas");
-            //InsertProduct(connectionString, "Oranges");
-            //InsertProduct(connectionString, "Mangos");
+            //InsertClientTransaction(connectionString, "Steph");
 
             //ClientToBuyProduct(connectionString, 1, 1);
             //ClientToBuyProduct(connectionString, 2, 3);
             //ClientToBuyProduct(connectionString, 3, 3);
-            //ClientToBuyProduct(connectionString, 4, 3);
+            ClientToBuyProduct(connectionString, 4, 5);
+
+            //DeleteProduct(connectionString, 3);
 
             GetCountOfBuyers(connectionString);
 
@@ -91,10 +94,20 @@ namespace Homework_1
         IF OBJECT_ID('dbo.Clients', 'U') IS NULL
         BEGIN
             CREATE TABLE dbo.Clients (
-                Id INT PRIMARY KEY IDENTITY(1,1),
-                Name VARCHAR(20) NOT NULL,
-                ProductId INT,
-                FOREIGN KEY (ProductId) REFERENCES dbo.Products(ProductId)
+                ClientId INT PRIMARY KEY IDENTITY(1,1),
+                Name VARCHAR(20) NOT NULL
+            );
+        END;";
+
+            string createBuyingsTable = @"
+        IF OBJECT_ID('dbo.Buyings', 'U') IS NULL
+        BEGIN
+            CREATE TABLE dbo.Buyings (
+                ClientId INT NOT NULL,
+                ProductId INT NOT NULL,
+                PRIMARY KEY (ClientId, ProductId),
+                FOREIGN KEY (ClientId) REFERENCES dbo.Clients(ClientId) ON DELETE CASCADE,
+                FOREIGN KEY (ProductId) REFERENCES dbo.Products(ProductId) ON DELETE CASCADE
             );
         END;";
 
@@ -114,6 +127,12 @@ namespace Homework_1
                     {
                         cmd.ExecuteNonQuery();
                         Console.WriteLine("Clients table checked/created successfully.");
+                    }
+
+                    using (SqlCommand cmd = new SqlCommand(createBuyingsTable, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("Buyings table checked/created successfully.");
                     }
                 }
                 catch (Exception ex)
@@ -165,9 +184,9 @@ namespace Homework_1
 
         static void ClientToBuyProduct(string connectionString, int ClientId, int ProductId )
         {
-            string updateClientRecordQuery = "UPDATE Clients SET ProductId = @ProductId WHERE Id = @ClientId";
+            string addBuyingQuery = "INSERT INTO Buyings (ClientId, ProductId) VALUES (@ClientId, @ProductId)";
             using (SqlConnection conn = new SqlConnection(connectionString))
-            using (SqlCommand cmd = new SqlCommand(updateClientRecordQuery, conn))
+            using (SqlCommand cmd = new SqlCommand(addBuyingQuery, conn))
             {
                 cmd.Parameters.AddWithValue("@ProductId", ProductId);
                 cmd.Parameters.AddWithValue("@ClientId", ClientId);
@@ -228,7 +247,7 @@ namespace Homework_1
         }
         static void GetCountOfBuyers(string connectionString) 
         {
-            string getCountQuery = "SELECT ProductName, COUNT(Clients.Id) AS ClientCount FROM Clients JOIN Products ON Clients.ProductId = Products.ProductId GROUP BY ProductName";
+            string getCountQuery = "SELECT ProductName, COUNT(DISTINCT Buyings.ClientId) AS ClientCount FROM Buyings JOIN Products ON Buyings.ProductId = Products.ProductId GROUP BY Products.ProductName";
             
             using (SqlConnection conn = new SqlConnection(connectionString))
             using (SqlCommand cmd = new SqlCommand(getCountQuery, conn))
@@ -249,6 +268,50 @@ namespace Homework_1
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error fetching buyer count: " + ex.Message);
+                }
+            }
+        }
+
+        static void DeleteProduct(string connectionString, int id)
+        {
+            string deleteBuyingsQuery = "DELETE FROM Buyings WHERE ProductId = @productId";
+            string deleteProductQuery = "DELETE FROM Products WHERE ProductId = @productId";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                using (SqlTransaction transaction = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand cmdDeleteBuyings = new SqlCommand(deleteBuyingsQuery, conn, transaction))
+                        {
+                            cmdDeleteBuyings.Parameters.AddWithValue("@productId", id);
+                            cmdDeleteBuyings.ExecuteNonQuery();
+                        }
+
+                        using (SqlCommand cmdDeleteProduct = new SqlCommand(deleteProductQuery, conn, transaction))
+                        {
+                            cmdDeleteProduct.Parameters.AddWithValue("@productId", id);
+                            int rowsAffected = cmdDeleteProduct.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                Console.WriteLine("Product and related buyings successfully deleted.");
+                                transaction.Commit();
+                            }
+                            else
+                            {
+                                Console.WriteLine("No product found with the given ProductId.");
+                                transaction.Rollback();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Console.WriteLine($"Error occurred when deleting the product: {ex.Message}");
+                    }
                 }
             }
         }
