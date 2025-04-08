@@ -8,11 +8,11 @@ namespace AirportSystem.Models
         public string Type {get; set;}
         public ushort SeatNumber {get; set;}
         public bool PaymentSuccess {get; set;}
-        public int? PayrollId {get; set;}
-        public Payroll? Payroll {get; set;}
-        public int FlightId {get; set;}
-        public Flight Flight {get; set;}
-        public int UserId {get; set;}
+        public Payroll? Payroll { get; set; } = null!;
+        public int? FlightId {get; set;}
+        public Flight? Flight {get; set;} = null!;
+        public int? PassengerId {get; set;}
+        public Passenger? Passenger { get; set; } = null!;
 
     }
 }
