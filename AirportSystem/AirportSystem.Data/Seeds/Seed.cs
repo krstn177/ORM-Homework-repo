@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using AirportSystem.Models;
+using AirportSystem.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AirportSystem.Data.Seeds

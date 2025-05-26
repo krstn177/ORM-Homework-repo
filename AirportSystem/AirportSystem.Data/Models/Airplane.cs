@@ -1,6 +1,6 @@
-using AirportSystem.BaseModels;
+using AirportSystem.Data.BaseModels;
 
-namespace AirportSystem.Models
+namespace AirportSystem.Data.Models
 {
     public class Airplane:BaseModel
     {

@@ -7,13 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportSystem", "AirportSys
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportSystem.Data", "AirportSystem.Data\AirportSystem.Data.csproj", "{DB28256E-9990-4308-B933-370A8E8C32D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportSystem.Services", "AirportSystem.Services\AirportSystem.Services.csproj", "{C79B7D51-6F2C-41DD-A06C-CA065273397E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D8ACB387-862B-4B87-8276-F391367CDE5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +23,12 @@ Global
 		{DB28256E-9990-4308-B933-370A8E8C32D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB28256E-9990-4308-B933-370A8E8C32D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB28256E-9990-4308-B933-370A8E8C32D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C79B7D51-6F2C-41DD-A06C-CA065273397E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C79B7D51-6F2C-41DD-A06C-CA065273397E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C79B7D51-6F2C-41DD-A06C-CA065273397E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C79B7D51-6F2C-41DD-A06C-CA065273397E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

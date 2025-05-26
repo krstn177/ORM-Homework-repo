@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AirportSystem.Services\AirportSystem.Services.csproj" />
+  </ItemGroup>
+
 </Project>

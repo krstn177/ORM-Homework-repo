@@ -1,4 +1,4 @@
-namespace AirportSystem.BaseModels
+namespace AirportSystem.Data.BaseModels
 {
     public class BaseModel : IBaseModel
     {

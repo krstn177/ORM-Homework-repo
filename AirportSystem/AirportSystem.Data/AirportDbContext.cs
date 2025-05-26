@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using AirportSystem.Models;
+using AirportSystem.Data.Models;
 using AirportSystem.Data.Seeds;
 
 namespace AirportSystem.Data
