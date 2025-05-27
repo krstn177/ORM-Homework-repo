@@ -22,5 +22,10 @@ namespace Movies.Infrastructure
         {
             return await _context.Movies.ToListAsync();
         }
+
+        public async Task<Movie> GetMovieByNameAsync(string name)
+        {
+            return await _context.Movies.FirstOrDefaultAsync(movie => movie.MovieName.ToLower().Contains(name.ToLower()));
+        }
     }
 }

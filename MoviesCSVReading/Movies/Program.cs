@@ -34,12 +34,15 @@ namespace Movies
             var movieRepository = scope.ServiceProvider.GetRequiredService<IMovieRepository>();
 
             // Read movies from CSV and save to the database
-            var movies = csvReaderService.ReadMoviesFromCsv("../../../RawData/imdb_top_2000_movies.csv");
-            foreach (var movie in movies)
-            {
-                await movieRepository.AddMovieAsync(movie);
-                System.Console.WriteLine( $"Added movie: {movie.MovieName} ({movie.ReleaseYear})");
-            }
+            //var movies = csvReaderService.ReadMoviesFromCsv("../../../RawData/imdb_top_2000_movies.csv");
+            //var movies = await movieRepository.GetAllMoviesAsync();
+            //foreach (var movie in movies)
+            //{
+            //    //await movieRepository.AddMovieAsync(movie);
+            //    Console.WriteLine( $"{movie.MovieName} ({movie.ReleaseYear})");
+            //}
+            var singleMovie = await movieRepository.GetMovieByNameAsync("godfather");
+            Console.WriteLine($"{singleMovie.MovieName}: {singleMovie.Director}");
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Movies.Infrastructure
         // Constructor to accept DbContextOptions
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
