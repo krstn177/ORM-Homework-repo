@@ -20,7 +20,7 @@ namespace SalesRecords.Application
             using var reader = new StreamReader("./SalesRecords.csv");
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             csv.Context.RegisterClassMap<SalesRecordDTOMap>();
-            var records = csv.GetRecords<SalesRecordDTO>().ToList();
+            var records = csv.GetRecords<SalesRecordDTO>();
 
             await _recordModellingService.ImportSalesRecordsAsync(records);
         }
