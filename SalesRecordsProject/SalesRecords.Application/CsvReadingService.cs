@@ -15,9 +15,9 @@ namespace SalesRecords.Application
             _recordModellingService = recordModellingService;
         }
 
-        public async Task ReadRecordsAsync(string filePath)
+        public async Task ReadRecordsAsync()
         {
-            using var reader = new StreamReader(filePath);
+            using var reader = new StreamReader("./SalesRecords.csv");
             using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
             csv.Context.RegisterClassMap<SalesRecordDTOMap>();
             var records = csv.GetRecords<SalesRecordDTO>().ToList();
