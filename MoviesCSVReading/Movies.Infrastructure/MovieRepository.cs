@@ -27,5 +27,12 @@ namespace Movies.Infrastructure
         {
             return await _context.Movies.FirstOrDefaultAsync(movie => movie.MovieName.ToLower().Contains(name.ToLower()));
         }
+
+        public async Task<IEnumerable<Movie>> GetMoviesByNameMatchAsync(string nameMatch)
+        {
+            return await _context.Movies
+                .Where(movie => movie.MovieName != null && movie.MovieName.ToLower().Contains(nameMatch.ToLower()))
+                .ToListAsync();
+        }
     }
 }

@@ -1,0 +1,28 @@
+﻿using CsvHelper;
+using System.Globalization;
+using SalesRecords.Domain.DTO;
+using SalesRecords.Application.Mapping;
+using SalesRecords.Application.Interfaces;
+
+namespace SalesRecords.Application
+{
+    public class CsvReadingService : ICsvReadingService
+    {
+        private readonly IRecordModellingService _recordModellingService;
+
+        public CsvReadingService(IRecordModellingService recordModellingService)
+        {
+            _recordModellingService = recordModellingService;
+        }
+
+        public async Task ReadRecordsAsync(string filePath)
+        {
+            using var reader = new StreamReader(filePath);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            csv.Context.RegisterClassMap<SalesRecordDTOMap>();
+            var records = csv.GetRecords<SalesRecordDTO>().ToList();
+
+            await _recordModellingService.ImportSalesRecordsAsync(records);
+        }
+    }
+}

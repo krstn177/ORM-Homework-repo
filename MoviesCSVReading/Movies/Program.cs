@@ -41,8 +41,12 @@ namespace Movies
             //    //await movieRepository.AddMovieAsync(movie);
             //    Console.WriteLine( $"{movie.MovieName} ({movie.ReleaseYear})");
             //}
-            var singleMovie = await movieRepository.GetMovieByNameAsync("godfather");
-            Console.WriteLine($"{singleMovie.MovieName}: {singleMovie.Director}");
+            string nameMatch = Console.ReadLine() ?? " ";
+            var matchedMovies = await movieRepository.GetMoviesByNameMatchAsync(nameMatch);
+            foreach (Movie movie in matchedMovies)
+            {
+                Console.WriteLine($"{movie.MovieName}: {movie.Director}");
+            }
         }
     }
 }

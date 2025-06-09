@@ -10,5 +10,6 @@ namespace Movies.Domain
         Task AddMovieAsync(Movie movie);
         Task<IEnumerable<Movie>> GetAllMoviesAsync();
         Task<Movie> GetMovieByNameAsync(string name);
+        Task<IEnumerable<Movie>> GetMoviesByNameMatchAsync(string nameMatch);
     }
 }
